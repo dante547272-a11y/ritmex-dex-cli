@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ritmex Funding Monitor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 Ritmex Funding Monitor</h1>
+            <div class="header-info">
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">连接中...</span>
+                </div>
+                <div class="last-updated" id="lastUpdated">
+                    最后更新: --
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="exchange-filters">
+                <h3>交易所筛选</h3>
+                <div class="filter-checkboxes" id="exchangeFilters">
+                    <label><input type="checkbox" value="lighter" checked> Lighter</label>
+                    <label><input type="checkbox" value="binance" checked> Binance</label>
+                    <label><input type="checkbox" value="hyperliquid" checked> Hyperliquid</label>
+                    <label><input type="checkbox" value="edgex" checked> EdgeX</label>
+                    <label><input type="checkbox" value="grvt" checked> GRVT</label>
+                    <label><input type="checkbox" value="aster" checked> Aster</label>
+                    <label><input type="checkbox" value="backpack" checked> Backpack</label>
+                </div>
+            </div>
+
+            <div class="sort-controls">
+                <h3>排序</h3>
+                <select id="sortColumn">
+                    <option value="symbol">代币符号</option>
+                    <option value="lighterFunding">Lighter 资金费率</option>
+                    <option value="binanceFunding">Binance 资金费率</option>
+                    <option value="hyperliquidFunding">Hyperliquid 资金费率</option>
+                    <option value="edgexFunding">EdgeX 资金费率</option>
+                    <option value="grvtFunding">GRVT 资金费率</option>
+                    <option value="asterFunding">Aster 资金费率</option>
+                    <option value="backpackFunding">Backpack 资金费率</option>
+                </select>
+                <select id="sortDirection">
+                    <option value="desc">降序</option>
+                    <option value="asc">升序</option>
+                </select>
+            </div>
+
+            <div class="display-controls">
+                <h3>显示设置</h3>
+                <label>
+                    最大显示数量:
+                    <input type="number" id="displayLimit" value="20" min="5" max="100" step="5">
+                </label>
+                <label>
+                    资本金额 (USD):
+                    <input type="number" id="capitalAmount" value="10000" min="0" step="1000" placeholder="用于收益计算">
+                </label>
+            </div>
+        </div>
+
+        <div class="status-panel" id="statusPanel">
+            <!-- 实时状态信息 -->
+        </div>
+
+        <div class="table-container">
+            <h2>资金费率对比表</h2>
+            <div class="table-wrapper">
+                <table id="fundingTable">
+                    <thead>
+                        <tr>
+                            <th data-column="symbol">代币符号</th>
+                            <th data-column="lighterFunding" class="funding-column">Lighter</th>
+                            <th data-column="binanceFunding" class="funding-column">Binance</th>
+                            <th data-column="hyperliquidFunding" class="funding-column">Hyperliquid</th>
+                            <th data-column="edgexFunding" class="funding-column">EdgeX</th>
+                            <th data-column="grvtFunding" class="funding-column">GRVT</th>
+                            <th data-column="asterFunding" class="funding-column">Aster</th>
+                            <th data-column="backpackFunding" class="funding-column">Backpack</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fundingTableBody">
+                        <tr>
+                            <td colspan="8" class="loading">加载中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="spreads-container">
+            <h2>Top 价差排行榜</h2>
+            <div class="spreads-grid" id="spreadsGrid">
+                <div class="loading">计算中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

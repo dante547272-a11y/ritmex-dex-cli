@@ -1,0 +1,521 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e0e6ed;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px 30px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #00d4aa, #00a8ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff4757;
+    animation: pulse 2s infinite;
+}
+
+.status-dot.connected {
+    background: #2ed573;
+}
+
+.status-dot.connecting {
+    background: #ffa502;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.last-updated {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.controls > div {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.controls h3 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #00d4aa;
+}
+
+.filter-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.filter-checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.filter-checkboxes label:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-checkboxes input[type="checkbox"] {
+    accent-color: #00d4aa;
+}
+
+.sort-controls select,
+.display-controls input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e6ed;
+    font-size: 0.9rem;
+}
+
+.sort-controls select:focus,
+.display-controls input:focus {
+    outline: none;
+    border-color: #00d4aa;
+    box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.2);
+}
+
+.display-controls label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.status-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 30px;
+    border-left: 4px solid #00d4aa;
+    display: none;
+}
+
+.status-panel.show {
+    display: block;
+}
+
+.status-panel .status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 0.9rem;
+}
+
+.status-panel .status-item .status-value {
+    opacity: 0.8;
+}
+
+.table-container,
+.spreads-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-container h2,
+.spreads-container h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: #00d4aa;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#fundingTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+#fundingTable th {
+    background: rgba(0, 212, 170, 0.2);
+    color: #ffffff;
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(0, 212, 170, 0.3);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#fundingTable th:hover {
+    background: rgba(0, 212, 170, 0.3);
+}
+
+#fundingTable th.sortable::after {
+    content: ' ↕';
+    opacity: 0.5;
+}
+
+#fundingTable th.sorted-asc::after {
+    content: ' ↑';
+    opacity: 1;
+    color: #00d4aa;
+}
+
+#fundingTable th.sorted-desc::after {
+    content: ' ↓';
+    opacity: 1;
+    color: #00d4aa;
+}
+
+#fundingTable td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+}
+
+#fundingTable tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+#fundingTable tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.funding-rate {
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+
+.funding-rate.positive {
+    background: rgba(46, 213, 115, 0.2);
+    color: #2ed573;
+}
+
+.funding-rate.negative {
+    background: rgba(255, 71, 87, 0.2);
+    color: #ff4757;
+}
+
+.funding-rate.neutral {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e6ed;
+}
+
+.spreads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.spread-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.spread-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 212, 170, 0.3);
+}
+
+.spread-card .symbol {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #00d4aa;
+    margin-bottom: 10px;
+}
+
+.spread-card .diff {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #ffa502;
+    margin-bottom: 15px;
+}
+
+.spread-card .arbitrage-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.spread-card .exchange-action {
+    text-align: center;
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.spread-card .sell-action {
+    background: rgba(46, 213, 115, 0.1);
+    border: 1px solid rgba(46, 213, 115, 0.3);
+}
+
+.spread-card .buy-action {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+}
+
+.spread-card .action-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.spread-card .sell-action .action-label {
+    color: #2ed573;
+}
+
+.spread-card .buy-action .action-label {
+    color: #ff4757;
+}
+
+.spread-card .exchange-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 6px;
+    color: #ffffff;
+}
+
+.spread-card .exchange-rate.positive {
+    color: #2ed573;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+}
+
+.spread-card .exchange-rate.negative {
+    color: #ff4757;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+}
+
+.spread-card .action-desc {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+.spread-card .arrow {
+    font-size: 1.5rem;
+    margin: 0 15px;
+    color: #ffa502;
+    animation: pulse-arrow 2s infinite;
+}
+
+@keyframes pulse-arrow {
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 1; 
+    }
+    50% { 
+        transform: scale(1.1); 
+        opacity: 0.8; 
+    }
+}
+
+.spread-card .exchanges {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.spread-card .exchange-info {
+    text-align: center;
+}
+
+.spread-card .exchange-name {
+    color: #a4b0be;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
+
+.spread-card .exchange-rate {
+    font-weight: 600;
+}
+
+.spread-card .profit {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spread-card .profit-24h {
+    color: #00d4aa;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.spread-card .profit-amount {
+    color: #ffa502;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 4px;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .controls {
+        grid-template-columns: 1fr;
+    }
+    
+    .spreads-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .filter-checkboxes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .table-wrapper {
+        font-size: 0.8rem;
+    }
+    
+    #fundingTable th,
+    #fundingTable td {
+        padding: 8px 6px;
+    }
+    
+    .spreads-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 212, 170, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 212, 170, 0.7);
+}
