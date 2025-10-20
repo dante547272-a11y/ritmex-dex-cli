@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { fetchLighterFundingRates, fetchBinanceFundingInfo } from "../services/http/lighter";
+import { fetchLighterFundingRates } from "../services/http/lighter";
 import { fetchHyperliquidPredictedFundings, mapHlPerpToEntries } from "../services/http/hyperliquid";
 import { LIGHTER_REFRESH_MS } from "../utils/constants";
 import type { LighterFundingEntry } from "../types/lighter";
@@ -28,35 +28,22 @@ export const useLighterFunding = (): LighterFundingState => {
     setState((prev) => ({ ...prev, isRefreshing: true }));
 
     try {
-      const [rates, binanceInfo, hlPredicted] = await Promise.all([
+      const [rates, hlPredicted] = await Promise.all([
         fetchLighterFundingRates(),
-        fetchBinanceFundingInfo().catch(() => new Map<string, number>()),
         fetchHyperliquidPredictedFundings().catch(() => []),
       ]);
+
+      // Filter out Hyperliquid data from Lighter API - we'll use official API data only
+      const filteredRates = rates.filter(entry => entry.exchange !== "hyperliquid");
 
       const hlEntries = mapHlPerpToEntries(hlPredicted).map((e) => ({
         market_id: -1,
         exchange: "hyperliquid",
         symbol: e.symbol,
-        rate: e.rate,
+        rate: e.rate * 8, // Hyperliquid funds hourly; normalize to 8h equivalent
       })) as LighterFundingEntry[];
 
-      const normalized = [...rates, ...hlEntries].map((entry) => {
-        if (entry.exchange === "binance") {
-          const symbolKey = entry.symbol.toUpperCase();
-          const hours = binanceInfo.get(symbolKey) ?? 8;
-          const eightHourRate = typeof entry.rate === "number" ? entry.rate * (8 / hours) : entry.rate;
-          return { ...entry, rate: eightHourRate } as typeof entry;
-        }
-
-        if (entry.exchange === "hyperliquid") {
-          // Hyperliquid funds hourly; normalize to 8h equivalent
-          const eightHourRate = typeof entry.rate === "number" ? entry.rate * 8 : entry.rate;
-          return { ...entry, rate: eightHourRate } as typeof entry;
-        }
-
-        return entry;
-      });
+      const normalized = [...filteredRates, ...hlEntries];
 
       setState({ rates: normalized, error: null, isRefreshing: false, lastUpdated: new Date() });
     } catch (error) {
